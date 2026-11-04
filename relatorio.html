@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrega e Avaliação | Recomplica — Central de Resgate ENEM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="brand">
+            <h1>🎓 Recomplica — Central de Resgate ENEM <span class="brand-badge">SENAI • Manutenção de Sistemas</span></h1>
+        </div>
+        <nav class="nav-links">
+            <span id="headerTeamBadge" class="team-badge">👥 Equipe</span>
+            <a href="dashboard.html">📊 Painel Inicial</a>
+            <a href="consulta.html">📋 Fila de Chamados (12)</a>
+            <a href="ficha.html">🧑‍💻 Ficha Individual</a>
+            <a href="relatorio.html" class="active">📄 Entrega e Relatório</a>
+            <a href="index.html">⚙️ Equipe</a>
+        </nav>
+    </header>
+
+    <main class="container" id="relatorioConsolidadoContainer">
+        <section class="context-banner no-print">
+            <h2>📄 Encerramento da Atividade, Entrega e Avaliação</h2>
+            <p>
+                Esta área consolida toda a produção coletiva da equipe e a contribuição individual de cada estudante.
+                Utilize os botões abaixo para <strong>exportar o Relatório em HTML imprimível (Salvar como PDF)</strong> e o <strong>Backup dos Dados em JSON</strong>.
+            </p>
+        </section>
+
+        <!-- Barra de Ações de Exportação -->
+        <section class="card no-print" style="background: #f0fdfa; border-color: #99f6e4;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h2 style="font-size: 1.05rem; color: #0f766e; font-weight: 800;">📦 Exportação para Entrega ao Professor</h2>
+                    <p style="font-size: 0.85rem; color: #115e59;">Gere os arquivos finais da avaliação ou imprima diretamente esta página em PDF.</p>
+                </div>
+                <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+                    <button type="button" class="btn" onclick="exportarRelatorioHtmlImprimivel()">
+                        📄 Exportar Relatório HTML Imprimível (PDF)
+                    </button>
+                    <button type="button" class="btn btn-indigo" onclick="window.print()">
+                        🖨️ Imprimir / Salvar PDF Agora
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="exportarBackupJson()">
+                        💾 Exportar Backup JSON
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Identificação e Resumo da Equipe -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>1. Relatório da Equipe e Indicadores de Atendimento</h2>
+                    <p>Unidade Curricular: Manutenção de Sistemas — Recomplica ENEM</p>
+                </div>
+            </div>
+
+            <div class="grid-3" style="margin-bottom: 1.15rem;">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.85rem; border-radius: 6px;">
+                    <div style="font-size: 0.76rem; color: #64748b; text-transform: uppercase; font-weight: 700;">Equipe</div>
+                    <div id="relNomeEquipe" style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-top: 0.2rem;">-</div>
+                </div>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.85rem; border-radius: 6px;">
+                    <div style="font-size: 0.76rem; color: #64748b; text-transform: uppercase; font-weight: 700;">Turma</div>
+                    <div id="relTurmaEquipe" style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-top: 0.2rem;">-</div>
+                </div>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.85rem; border-radius: 6px;">
+                    <div style="font-size: 0.76rem; color: #64748b; text-transform: uppercase; font-weight: 700;">Progresso Concluído</div>
+                    <div id="relProgressoGeral" style="font-size: 1.25rem; font-weight: 800; color: #0f766e; margin-top: 0.2rem;">0%</div>
+                </div>
+            </div>
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.85rem; border-radius: 6px; margin-bottom: 1.15rem;">
+                <strong style="font-size: 0.85rem; color: #334155;">👥 Integrantes da Equipe:</strong>
+                <span id="relIntegrantesEquipe" style="font-size: 0.9rem; color: #0f172a; margin-left: 0.35rem;">-</span>
+            </div>
+
+            <div class="stats-grid" style="margin-bottom: 0;">
+                <div class="stat-card stat-atendimento">
+                    <span class="stat-label">Chamados Trabalhados</span>
+                    <div class="stat-value" id="relTotalTrabalhados">0</div>
+                    <span class="stat-sub">De um total de 12 chamados</span>
+                </div>
+                <div class="stat-card stat-resolvidos">
+                    <span class="stat-label">Resolvidos</span>
+                    <div class="stat-value" id="relTotalResolvidos" style="font-size: 1.15rem;">0</div>
+                    <span class="stat-sub">Correção + Orientação</span>
+                </div>
+                <div class="stat-card stat-pendentes">
+                    <span class="stat-label">Pendentes Justificados</span>
+                    <div class="stat-value" id="relTotalPendentes">0</div>
+                    <span class="stat-sub">Com justificativa registrada</span>
+                </div>
+                <div class="stat-card stat-disponiveis">
+                    <span class="stat-label">Disponíveis (Não iniciados)</span>
+                    <div class="stat-value" id="relTotalDisponiveis">12</div>
+                    <span class="stat-sub">Na fila de espera</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Registros Técnicos e Responsáveis de Cada Atendimento -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>2. Registros e Responsáveis de Cada Atendimento (Produção Coletiva)</h2>
+                    <p>Detalhamento das 4 informações obrigatórias (Problema, Solução, Verificação e Responsáveis) nos 12 chamados.</p>
+                </div>
+            </div>
+            <div id="relListaAtendimentos">
+                <!-- Preenchido dinamicamente por app.js -->
+            </div>
+        </section>
+
+        <!-- 3. Fichas Individuais Preenchidas -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>3. Fichas Individuais Preenchidas (Contribuição Individual)</h2>
+                    <p>Respostas individuais dos estudantes sobre sua participação técnica nos chamados.</p>
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 170px;">Estudante</th>
+                            <th style="width: 240px;">1. Qual chamado ajudou a resolver?</th>
+                            <th>2. O que você fez?</th>
+                            <th>3. Como verificou ou justificou a solução?</th>
+                        </tr>
+                    </thead>
+                    <tbody id="relTabelaFichasBody">
+                        <!-- Preenchido dinamicamente por app.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 4. Histórico Imutável de Alterações -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>4. Trilha de Auditoria e Histórico de Alterações (Protegido)</h2>
+                    <p>Registro cronológico imutável de todas as intervenções realizadas pela equipe durante a atividade.</p>
+                </div>
+                <span class="badge badge-essencial">🔒 Registro Protegido</span>
+            </div>
+            <div id="relListaHistorico" class="history-log" style="max-height: 360px;">
+                <!-- Preenchido dinamicamente por app.js -->
+            </div>
+        </section>
+    </main>
+
+    <script src="validadores.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

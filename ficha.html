@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha Individual | Recomplica — Central de Resgate ENEM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="brand">
+            <h1>🎓 Recomplica — Central de Resgate ENEM <span class="brand-badge">SENAI • Manutenção de Sistemas</span></h1>
+        </div>
+        <nav class="nav-links">
+            <span id="headerTeamBadge" class="team-badge">👥 Equipe</span>
+            <a href="dashboard.html">📊 Painel Inicial</a>
+            <a href="consulta.html">📋 Fila de Chamados (12)</a>
+            <a href="ficha.html" class="active">🧑‍💻 Ficha Individual</a>
+            <a href="relatorio.html">📄 Entrega e Relatório</a>
+            <a href="index.html">⚙️ Equipe</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="context-banner">
+            <h2>🧑‍💻 Ficha Individual de Contribuição Técnica</h2>
+            <p>
+                Para facilitar a identificação da contribuição individual dentro da equipe, cada estudante deve registrar abaixo sua participação direta em pelo menos um dos chamados atendidos.
+            </p>
+        </section>
+
+        <!-- Formulário da Ficha Individual -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>Registrar Minha Contribuição Individual</h2>
+                    <p>Responda às 3 perguntas obrigatórias sobre o chamado que você investigou, corrigiu, orientou ou verificou.</p>
+                </div>
+                <a href="index.html" class="btn btn-sm btn-secondary">+ Cadastrar Novo Integrante</a>
+            </div>
+
+            <div id="erroFichaAlert" style="display:none; background:#fee2e2; color:#991b1b; padding:0.75rem 1rem; border-radius:6px; margin-bottom:1rem; font-size:0.88rem; border:1px solid #fca5a5;"></div>
+
+            <form id="formFichaIndividual">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="fichaEstudante">Identificação do Estudante (Integrante da Equipe) <span class="required-mark">*</span></label>
+                        <select id="fichaEstudante" required>
+                            <option value="">Selecione seu nome na equipe...</option>
+                        </select>
+                        <div class="form-help">Se seu nome não aparecer, adicione-o na tela <a href="index.html">Equipe</a>.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fichaChamadoId">1. Qual chamado você ajudou a resolver? <span class="required-mark">*</span></label>
+                        <select id="fichaChamadoId" required>
+                            <option value="">Selecione o chamado...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fichaOQueFez">2. O que você fez? <span class="required-mark">*</span></label>
+                    <textarea id="fichaOQueFez" rows="3" placeholder="Descreva com detalhes sua atuação técnica: como investigou o problema, qual ajuste realizou no gabarito/explicação/classificação ou qual orientação elaborou para o usuário..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="fichaComoVerificou">3. Como verificou ou justificou a solução? <span class="required-mark">*</span></label>
+                    <textarea id="fichaComoVerificou" rows="3" placeholder="Explique como você conferiu se a resposta estava correta (cálculo, regra oficial do ENEM, teste de exibição) ou qual foi a justificativa técnica caso o chamado tenha ficado pendente..." required></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem;">
+                    <button type="submit" class="btn">💾 Registrar Ficha Individual</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Lista de Fichas Individuais Registradas -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>📋 Fichas Individuais Preenchidas pela Equipe</h2>
+                    <p>Estes registros serão incluídos automaticamente no Relatório de Entrega e Avaliação.</p>
+                </div>
+                <a href="relatorio.html" class="btn btn-sm btn-indigo">📄 Ir para Entrega e Relatório &rarr;</a>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 170px;">Estudante</th>
+                            <th style="width: 240px;">1. Chamado Atendido</th>
+                            <th>2. O que você fez?</th>
+                            <th>3. Como verificou ou justificou a solução?</th>
+                            <th style="width: 135px;">Data / Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaFichasBody">
+                        <!-- Preenchido dinamicamente por app.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="validadores.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Inicial | Recomplica — Central de Resgate ENEM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="brand">
+            <h1>🎓 Recomplica — Central de Resgate ENEM <span class="brand-badge">SENAI • Manutenção de Sistemas</span></h1>
+        </div>
+        <nav class="nav-links">
+            <span id="headerTeamBadge" class="team-badge">👥 Equipe</span>
+            <a href="dashboard.html" class="active">📊 Painel Inicial</a>
+            <a href="consulta.html">📋 Fila de Chamados (12)</a>
+            <a href="ficha.html">🧑‍💻 Ficha Individual</a>
+            <a href="relatorio.html">📄 Entrega e Relatório</a>
+            <a href="index.html">⚙️ Equipe</a>
+        </nav>
+    </header>
+
+    <main class="container" id="painelInicialStats">
+        <section class="context-banner">
+            <h2>🎯 Painel de Sustentação da Equipe — Revisão ENEM</h2>
+            <p>
+                Acompanhe abaixo o andamento dos <strong>12 chamados</strong> da Central de Resgate (<strong>8 essenciais</strong> e <strong>4 de aprofundamento</strong>).
+                Investigue cada item da plataforma, corrija o conteúdo/configuração quando houver falha real, oriente o estudante quando a questão estiver correta ou registre pendência técnica justificada.
+            </p>
+        </section>
+
+        <!-- Contadores Principais do Painel Inicial -->
+        <section class="stats-grid" aria-label="Indicadores de Chamados">
+            <div class="stat-card stat-disponiveis">
+                <span class="stat-label">📥 Chamados Disponíveis</span>
+                <div class="stat-value" id="statDisponiveis">12</div>
+                <span class="stat-sub">Aguardando análise da equipe</span>
+            </div>
+
+            <div class="stat-card stat-atendimento">
+                <span class="stat-label">⏳ Em Atendimento</span>
+                <div class="stat-value" id="statEmAtendimento">0</div>
+                <span class="stat-sub">Investigação parcial em andamento</span>
+            </div>
+
+            <div class="stat-card stat-resolvidos">
+                <span class="stat-label">✅ Resolvidos</span>
+                <div class="stat-value" id="statResolvidos">0</div>
+                <span class="stat-sub" id="statResolvidosDetalhe">0 por correção • 0 por orientação</span>
+            </div>
+
+            <div class="stat-card stat-pendentes">
+                <span class="stat-label">⚠️ Pendentes</span>
+                <div class="stat-value" id="statPendentes">0</div>
+                <span class="stat-sub">Com justificativa técnica registrada</span>
+            </div>
+        </section>
+
+        <!-- Progresso da Equipe -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>📈 Progresso da Equipe na Atividade Avaliativa</h2>
+                    <p>Meta: analisar e concluir os 12 chamados (8 essenciais + 4 de aprofundamento) e preencher as fichas individuais.</p>
+                </div>
+                <div style="text-align: right;">
+                    <span id="progressoPercentual" style="font-size: 1.85rem; font-weight: 800; color: #0f766e;">0%</span>
+                    <div id="progressoContagem" style="font-size: 0.8rem; color: #64748b;">0 de 12 chamados finalizados</div>
+                </div>
+            </div>
+
+            <div class="progress-wrapper">
+                <div class="progress-track">
+                    <div id="progressoBarraFill" class="progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div class="grid-3" style="margin-top: 1.25rem;">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.9rem;">
+                    <div style="font-size: 0.78rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Chamados Essenciais</div>
+                    <div id="progressoEssenciais" style="font-size: 1.35rem; font-weight: 800; color: #3730a3; margin-top: 0.2rem;">0 / 8</div>
+                    <div style="font-size: 0.78rem; color: #475569;">Gabaritos, dúvidas, áreas e explicações</div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.9rem;">
+                    <div style="font-size: 0.78rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Chamados de Aprofundamento</div>
+                    <div id="progressoAprofundamento" style="font-size: 1.35rem; font-weight: 800; color: #6d28d9; margin-top: 0.2rem;">0 / 4</div>
+                    <div style="font-size: 0.78rem; color: #475569;">Regras ENEM, TRI, prevenção e infraestrutura</div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.9rem;">
+                    <div style="font-size: 0.78rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Fichas Individuais</div>
+                    <div id="progressoFichas" style="font-size: 1.35rem; font-weight: 800; color: #0f766e; margin-top: 0.2rem;">0 preenchida(s)</div>
+                    <div style="font-size: 0.78rem; color: #475569;">Registro individual de cada estudante</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Identificação da Equipe e Atalhos Rápidos -->
+        <div class="grid-2">
+            <section class="card">
+                <div class="card-header">
+                    <h2>👥 Equipe Cadastrada</h2>
+                    <a href="index.html" class="btn btn-sm btn-secondary">✏️ Editar Integrantes</a>
+                </div>
+                <p style="font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;" id="painelNomeEquipe">Equipe Recomplica</p>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem;">Integrantes habilitados para registro de autoria:</p>
+                <div id="painelListaIntegrantes" class="team-members-list"></div>
+            </section>
+
+            <section class="card">
+                <div class="card-header">
+                    <h2>🚀 Roteiro da Atividade</h2>
+                </div>
+                <ol style="padding-left: 1.2rem; font-size: 0.9rem; color: #334155; display: grid; gap: 0.5rem; margin-bottom: 1.15rem;">
+                    <li>Acesse a <strong>Fila de Chamados</strong> e analise os 12 casos reais da plataforma Recomplica ENEM.</li>
+                    <li>Em cada atendimento, registre <strong>Problema, Solução, Verificação e Responsáveis</strong>.</li>
+                    <li>Preencha a <strong>Ficha Individual</strong> de cada integrante da equipe.</li>
+                    <li>Na aba <strong>Entrega e Relatório</strong>, exporte o HTML imprimível (PDF) e o backup JSON.</li>
+                </ol>
+                <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+                    <a href="consulta.html" class="btn">📋 Ir para Fila de Chamados</a>
+                    <a href="ficha.html" class="btn btn-indigo">🧑‍💻 Preencher Ficha Individual</a>
+                    <a href="relatorio.html" class="btn btn-secondary">📄 Ver Relatório de Entrega</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="validadores.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

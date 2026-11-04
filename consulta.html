@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fila de Chamados (12) | Recomplica — Central de Resgate ENEM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="brand">
+            <h1>🎓 Recomplica — Central de Resgate ENEM <span class="brand-badge">SENAI • Manutenção de Sistemas</span></h1>
+        </div>
+        <nav class="nav-links">
+            <span id="headerTeamBadge" class="team-badge">👥 Equipe</span>
+            <a href="dashboard.html">📊 Painel Inicial</a>
+            <a href="consulta.html" class="active">📋 Fila de Chamados (12)</a>
+            <a href="ficha.html">🧑‍💻 Ficha Individual</a>
+            <a href="relatorio.html">📄 Entrega e Relatório</a>
+            <a href="index.html">⚙️ Equipe</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="context-banner">
+            <h2>📋 Fila de Chamados da Equipe (8 Essenciais + 4 de Aprofundamento)</h2>
+            <p>
+                Clique em <strong>"🛠️ Atender"</strong> para inspecionar a questão ou situação associada no banco da Recomplica.
+                Você poderá ajustar o gabarito, a área do conhecimento ou a explicação quando houver falha real no sistema, ou orientar o estudante quando a questão estiver correta.
+            </p>
+        </section>
+
+        <!-- Barra de Filtros -->
+        <section class="card" style="padding: 1.15rem 1.25rem;">
+            <div class="filters-bar">
+                <div class="form-group">
+                    <label for="filtroBusca">🔎 Buscar por código, título ou relato</label>
+                    <input type="text" id="filtroBusca" placeholder="Ex: #CH-01, média, gabarito, redação...">
+                </div>
+
+                <div class="form-group">
+                    <label for="filtroNivel">🎯 Nível do Chamado</label>
+                    <select id="filtroNivel">
+                        <option value="">Todos os níveis (12)</option>
+                        <option value="Essencial">Essencial (8 chamados)</option>
+                        <option value="Aprofundamento">Aprofundamento (4 chamados)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="filtroArea">📚 Área do Conhecimento ENEM</label>
+                    <select id="filtroArea">
+                        <option value="">Todas as áreas</option>
+                        <option value="Matemática e suas Tecnologias">Matemática e suas Tecnologias</option>
+                        <option value="Ciências da Natureza e suas Tecnologias">Ciências da Natureza e suas Tecnologias</option>
+                        <option value="Ciências Humanas e suas Tecnologias">Ciências Humanas e suas Tecnologias</option>
+                        <option value="Linguagens, Códigos e suas Tecnologias">Linguagens, Códigos e suas Tecnologias</option>
+                        <option value="Redação e Plataforma">Redação e Plataforma</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="filtroSituacao">📌 Situação</label>
+                    <select id="filtroSituacao">
+                        <option value="">Todas as situações</option>
+                        <option value="Disponível">Disponível</option>
+                        <option value="Em atendimento">Em atendimento</option>
+                        <option value="Resolvidos">Todos os Resolvidos</option>
+                        <option value="Resolvido após correção">Resolvido após correção</option>
+                        <option value="Resolvido por orientação">Resolvido por orientação</option>
+                        <option value="Pendente">Pendente</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabela de Chamados -->
+        <section class="card">
+            <div class="card-header">
+                <div>
+                    <h2>Chamados da Central Recomplica ENEM</h2>
+                    <p>Cada chamado está associado a uma questão ou situação concreta da plataforma.</p>
+                </div>
+                <a href="ficha.html" class="btn btn-sm btn-indigo">🧑‍💻 Ir para Ficha Individual &rarr;</a>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 120px;">Identificação</th>
+                            <th>Título e Relato do Problema</th>
+                            <th style="width: 210px;">Área do Conhecimento</th>
+                            <th style="width: 100px;">Prioridade</th>
+                            <th style="width: 185px;">Situação</th>
+                            <th style="width: 190px;">Ação de Suporte</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaChamadosBody">
+                        <!-- Preenchido dinamicamente por app.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="validadores.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

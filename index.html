@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recomplica — Central de Resgate ENEM | Identificação da Equipe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-wrapper">
+    <main class="card login-card">
+        <div class="login-header">
+            <span class="login-badge">🎓 UC: Manutenção de Sistemas — SENAI</span>
+            <h1>Recomplica — Central de Resgate ENEM</h1>
+            <p>Plataforma de Revisão ENEM • Sustentação e Investigação de Chamados</p>
+        </div>
+
+        <div class="context-banner" style="margin-bottom: 1.25rem;">
+            <h2>🚨 Contexto da Missão</h2>
+            <p>
+                Após uma atualização na plataforma <strong>Recomplica ENEM</strong>, estudantes relataram inconsistências em questões, gabaritos, explicações e organização das áreas do conhecimento.
+                Cadastre sua equipe de suporte abaixo para iniciar a investigação dos <strong>12 chamados</strong> (8 essenciais e 4 de aprofundamento).
+            </p>
+        </div>
+
+        <form id="formIdentificacaoEquipe">
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="inputNomeEquipe">Nome da Equipe de Suporte <span class="required-mark">*</span></label>
+                    <input type="text" id="inputNomeEquipe" placeholder="Ex: Esquadrão Sustentação Alfa" required>
+                </div>
+                <div class="form-group">
+                    <label for="inputTurma">Turma / Período <span class="required-mark">*</span></label>
+                    <input type="text" id="inputTurma" placeholder="Ex: TDS-2026 / Manutenção de Sistemas" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputNovoIntegrante">Integrantes da Equipe (necessário para registrar a autoria) <span class="required-mark">*</span></label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="inputNovoIntegrante" placeholder="Digite o nome do estudante e clique em Adicionar">
+                    <button type="button" id="btnAddIntegrante" class="btn btn-secondary" style="white-space: nowrap;">+ Adicionar</button>
+                </div>
+                <div class="form-help">
+                    Adicione todos os estudantes da equipe. Esses nomes serão usados na autoria dos atendimentos e nas fichas individuais.
+                </div>
+                <div id="listaIntegrantesTags" class="team-members-list"></div>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                <a href="dashboard.html" class="btn btn-secondary">Ir direto ao Painel &rarr;</a>
+                <button type="submit" class="btn">🚀 Salvar Equipe e Acessar Central de Resgate</button>
+            </div>
+        </form>
+    </main>
+
+    <script src="validadores.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
