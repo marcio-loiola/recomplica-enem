@@ -342,22 +342,29 @@ describe('Suíte de Testes — Recomplica: Central de Resgate ENEM', () => {
             const historicoSalvo = JSON.parse(localStorageMock.getItem('recomplica_historico_v1'));
             expect(historicoSalvo.length).toBeGreaterThanOrEqual(4);
 
-            // Testa exportação do Relatório HTML Imprimível e do Backup JSON
-            sessaoAposReload.windowMock.exportarRelatorioHtmlImprimivel();
+            // Testa geração do HTML base e exportação direta do Relatório em PDF e do Backup JSON
+            const htmlRelatorioBase = sessaoAposReload.windowMock.gerarHtmlRelatorio();
+            expect(htmlRelatorioBase).toContain('<!DOCTYPE html>');
+            expect(htmlRelatorioBase).toContain('Recomplica — Central de Resgate ENEM');
+
+            sessaoAposReload.windowMock.exportarRelatorioPdf();
             sessaoAposReload.windowMock.exportarBackupJson();
 
             expect(exportedFiles).toHaveLength(2);
-            const htmlExportado = exportedFiles[0].content;
+            const pdfExportado = exportedFiles[0].content;
             const jsonExportado = JSON.parse(exportedFiles[1].content);
 
-            // Confere conteúdo do relatório HTML exportado
-            expect(htmlExportado).toContain('Recomplica — Central de Resgate ENEM');
-            expect(htmlExportado).toContain('Resolvido após correção');
-            expect(htmlExportado).toContain('Resolvido por orientação');
-            expect(htmlExportado).toContain('Pendente');
-            expect(htmlExportado).toContain('Ana Beatriz');
-            expect(htmlExportado).toContain('Carlos Eduardo');
-            expect(htmlExportado).toContain('Mariana Souza');
+            // Confere que o arquivo exportado é um PDF válido gerado a partir do relatório HTML
+            expect(exportedFiles[0].type).toBe('application/pdf');
+            expect(exportedFiles[0].downloadName).toMatch(/\.pdf$/);
+            expect(pdfExportado.startsWith('%PDF-1.4')).toBe(true);
+            expect(pdfExportado).toContain('Recomplica — Central de Resgate ENEM');
+            expect(pdfExportado).toContain('Resolvido após correção');
+            expect(pdfExportado).toContain('Resolvido por orientação');
+            expect(pdfExportado).toContain('Pendente');
+            expect(pdfExportado).toContain('Ana Beatriz');
+            expect(pdfExportado).toContain('Carlos Eduardo');
+            expect(pdfExportado).toContain('Mariana Souza');
 
             // Confere conteúdo do backup JSON exportado
             expect(jsonExportado.resumo.resolvidosCorrecao).toBe(1);

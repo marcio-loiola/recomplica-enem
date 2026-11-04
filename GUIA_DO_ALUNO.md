@@ -55,5 +55,5 @@ Cada estudante da equipe deve acessar a aba **Ficha Individual** e responder:
 ### Passo 5: Entrega e Exportação (`relatorio.html`)
 Ao concluir os atendimentos e as fichas individuais, acesse **Entrega e Relatório**:
 1. Confira se todos os 12 chamados e as fichas individuais de todos os membros estão registrados.
-2. Clique em **📄 Exportar Relatório HTML Imprimível (PDF)** (abra o arquivo gerado e use *Imprimir -> Salvar como PDF* se solicitado pelo professor).
+2. Clique em **🖨️ Imprimir / Exportar Relatório PDF** para baixar diretamente o relatório consolidado em formato `.pdf`.
 3. Clique em **💾 Exportar Backup JSON** e entregue ambos os arquivos conforme orientação docente.

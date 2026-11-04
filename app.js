@@ -887,21 +887,21 @@ window.exportarBackupJson = function () {
     exibirToast('Backup JSON exportado com sucesso!');
 };
 
-window.exportarRelatorioHtmlImprimivel = function () {
+window.gerarHtmlRelatorio = function () {
     const equipe = getEquipe();
     const chamados = getChamados();
     const fichas = getFichas();
     const historico = getHistorico();
     const resumo = typeof Validadores !== 'undefined'
         ? Validadores.calcularResumoEquipe(chamados)
-        : { total: 12, disponiveis: 0, emAtendimento: 0, resolvidosTotal: 0, resolvidosCorrecao: 0, resolvidosOrientacao: 0, pendentes: 0, percentualProgresso: 0 };
+        : { total: 12, disponiveis: 0, emAtendimento: 0, resolvidosTotal: 0, resolvidosCorrecao: 0, resolvidosOrientacao: 0, pendentes: 0, concluidos: 0, percentualProgresso: 0 };
 
     const dataGeracao = new Date().toLocaleString('pt-BR');
 
     const linhasChamados = chamados.map(c => {
         const at = c.atendimento || {};
         return `
-            <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; margin-bottom: 14px; page-break-inside: avoid;">
+            <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; margin-bottom: 14px; page-break-inside: avoid; break-inside: avoid;">
                 <div style="display:flex; justify-content:space-between; border-bottom:1px solid #e2e8f0; padding-bottom:6px; margin-bottom:8px;">
                     <strong>${escaparHtml(c.codigo)} (${escaparHtml(c.nivel)}) — ${escaparHtml(c.titulo)}</strong>
                     <span><strong>Situação:</strong> ${escaparHtml(c.situacao)}</span>
@@ -921,7 +921,7 @@ window.exportarRelatorioHtmlImprimivel = function () {
 
     const linhasFichas = fichas.length > 0
         ? fichas.map(f => `
-            <tr>
+            <tr style="page-break-inside: avoid; break-inside: avoid;">
                 <td><strong>${escaparHtml(f.estudante)}</strong></td>
                 <td>${escaparHtml(f.chamadoCodigo)} — ${escaparHtml(f.chamadoTitulo)}</td>
                 <td>${escaparHtml(f.oQueFez)}</td>
@@ -931,104 +931,266 @@ window.exportarRelatorioHtmlImprimivel = function () {
         `).join('')
         : `<tr><td colspan="5" style="text-align:center;">Nenhuma ficha individual registrada até o momento.</td></tr>`;
 
-    const htmlDoc = `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>Relatório de Entrega — Recomplica ENEM (${escaparHtml(equipe.nomeEquipe)})</title>
     <style>
-        body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; color: #0f172a; margin: 24px; line-height: 1.5; }
-        h1 { color: #0f766e; font-size: 22px; margin-bottom: 4px; }
-        h2 { color: #1e293b; font-size: 17px; border-bottom: 2px solid #0f766e; padding-bottom: 4px; margin-top: 24px; }
-        .header-box { background: #f0fdfa; border: 1px solid #99f6e4; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
-        .stats-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
-        .stat-pill { background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px 14px; border-radius: 6px; font-size: 13px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: left; vertical-align: top; }
-        th { background: #f1f5f9; }
-        .print-btn { background: #0d9488; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 16px; }
-        @media print { .print-btn { display: none; } body { margin: 0; } }
+        body, .relatorio-pdf-root { font-family: 'Segoe UI', Roboto, Arial, sans-serif; color: #0f172a; margin: 0; padding: 16px; line-height: 1.5; background: #ffffff; }
+        .relatorio-pdf-root h1 { color: #0f766e; font-size: 22px; margin-top: 0; margin-bottom: 4px; }
+        .relatorio-pdf-root h2 { color: #1e293b; font-size: 17px; border-bottom: 2px solid #0f766e; padding-bottom: 4px; margin-top: 24px; }
+        .relatorio-pdf-root .header-box { background: #f0fdfa; border: 1px solid #99f6e4; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
+        .relatorio-pdf-root .stats-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+        .relatorio-pdf-root .stat-pill { background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px 14px; border-radius: 6px; font-size: 13px; }
+        .relatorio-pdf-root table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        .relatorio-pdf-root th, .relatorio-pdf-root td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: left; vertical-align: top; }
+        .relatorio-pdf-root th { background: #f1f5f9; }
     </style>
 </head>
 <body>
-    <button class="print-btn" onclick="window.print()">🖨️ Imprimir ou Salvar como PDF</button>
+    <div class="relatorio-pdf-root">
+        <div class="header-box">
+            <h1>Recomplica — Central de Resgate ENEM (Relatório de Avaliação)</h1>
+            <div><strong>Unidade Curricular:</strong> Manutenção de Sistemas — SENAI</div>
+            <div><strong>Equipe:</strong> ${escaparHtml(equipe.nomeEquipe)} | <strong>Turma:</strong> ${escaparHtml(equipe.turma)}</div>
+            <div><strong>Integrantes Cadastrados:</strong> ${escaparHtml((equipe.integrantes || []).join(', ') || 'Não informados')}</div>
+            <div><strong>Data/Hora de Geração:</strong> ${escaparHtml(dataGeracao)}</div>
+        </div>
 
-    <div class="header-box">
-        <h1>Recomplica — Central de Resgate ENEM (Relatório de Avaliação)</h1>
-        <div><strong>Unidade Curricular:</strong> Manutenção de Sistemas — SENAI</div>
-        <div><strong>Equipe:</strong> ${escaparHtml(equipe.nomeEquipe)} | <strong>Turma:</strong> ${escaparHtml(equipe.turma)}</div>
-        <div><strong>Integrantes Cadastrados:</strong> ${escaparHtml((equipe.integrantes || []).join(', ') || 'Não informados')}</div>
-        <div><strong>Data/Hora de Geração:</strong> ${escaparHtml(dataGeracao)}</div>
-    </div>
+        <h2>1. Resumo de Progresso da Equipe</h2>
+        <div class="stats-row">
+            <div class="stat-pill"><strong>Progresso Geral:</strong> ${resumo.percentualProgresso}% (${resumo.concluidos}/${resumo.total})</div>
+            <div class="stat-pill"><strong>Resolvidos por Correção:</strong> ${resumo.resolvidosCorrecao}</div>
+            <div class="stat-pill"><strong>Resolvidos por Orientação:</strong> ${resumo.resolvidosOrientacao}</div>
+            <div class="stat-pill"><strong>Pendentes Justificados:</strong> ${resumo.pendentes}</div>
+            <div class="stat-pill"><strong>Em Atendimento:</strong> ${resumo.emAtendimento}</div>
+            <div class="stat-pill"><strong>Disponíveis:</strong> ${resumo.disponiveis}</div>
+        </div>
 
-    <h2>1. Resumo de Progresso da Equipe</h2>
-    <div class="stats-row">
-        <div class="stat-pill"><strong>Progresso Geral:</strong> ${resumo.percentualProgresso}% (${resumo.concluidos}/${resumo.total})</div>
-        <div class="stat-pill"><strong>Resolvidos por Correção:</strong> ${resumo.resolvidosCorrecao}</div>
-        <div class="stat-pill"><strong>Resolvidos por Orientação:</strong> ${resumo.resolvidosOrientacao}</div>
-        <div class="stat-pill"><strong>Pendentes Justificados:</strong> ${resumo.pendentes}</div>
-        <div class="stat-pill"><strong>Em Atendimento:</strong> ${resumo.emAtendimento}</div>
-        <div class="stat-pill"><strong>Disponíveis:</strong> ${resumo.disponiveis}</div>
-    </div>
+        <h2>2. Registros Técnicos dos 12 Chamados e Autoria Coletiva</h2>
+        ${linhasChamados}
 
-    <h2>2. Registros Técnicos dos 12 Chamados e Autoria Coletiva</h2>
-    ${linhasChamados}
-
-    <h2>3. Fichas Individuais dos Estudantes (Contribuição Individual)</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Estudante</th>
-                <th>Chamado Atendido</th>
-                <th>O que você fez?</th>
-                <th>Como verificou ou justificou a solução?</th>
-                <th>Data/Hora</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${linhasFichas}
-        </tbody>
-    </table>
-
-    <h2>4. Trilha de Auditoria e Histórico de Alterações (${historico.length} registros)</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Data/Hora</th>
-                <th>Transição</th>
-                <th>Ação Registrada</th>
-                <th>Responsáveis</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${historico.map(h => `
+        <h2>3. Fichas Individuais dos Estudantes (Contribuição Individual)</h2>
+        <table>
+            <thead>
                 <tr>
-                    <td>${h.id}</td>
-                    <td>${escaparHtml(h.dataHora)}</td>
-                    <td>${escaparHtml(h.situacaoAnterior)} &rarr; ${escaparHtml(h.situacaoNova)}</td>
-                    <td>${escaparHtml(h.acao)}</td>
-                    <td>${escaparHtml(h.responsaveis)}</td>
+                    <th>Estudante</th>
+                    <th>Chamado Atendido</th>
+                    <th>O que você fez?</th>
+                    <th>Como verificou ou justificou a solução?</th>
+                    <th>Data/Hora</th>
                 </tr>
-            `).join('')}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                ${linhasFichas}
+            </tbody>
+        </table>
+
+        <h2>4. Trilha de Auditoria e Histórico de Alterações (${historico.length} registros)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Data/Hora</th>
+                    <th>Transição</th>
+                    <th>Ação Registrada</th>
+                    <th>Responsáveis</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${historico.map(h => `
+                    <tr style="page-break-inside: avoid; break-inside: avoid;">
+                        <td>${h.id}</td>
+                        <td>${escaparHtml(h.dataHora)}</td>
+                        <td>${escaparHtml(h.situacaoAnterior)} &rarr; ${escaparHtml(h.situacaoNova)}</td>
+                        <td>${escaparHtml(h.acao)}</td>
+                        <td>${escaparHtml(h.responsaveis)}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>`;
+};
 
-    const blob = new Blob([htmlDoc], { type: 'text/html;charset=utf-8;' });
+function escaparTextoPdfWinAnsi(texto) {
+    const normalizado = String(texto || '')
+        .replace(/—|–/g, '-')
+        .replace(/•/g, '*')
+        .replace(/→/g, '->');
+    let out = '';
+    for (let i = 0; i < normalizado.length; i++) {
+        const code = normalizado.charCodeAt(i);
+        if (code === 0x28 || code === 0x29 || code === 0x5c) {
+            out += '\\' + normalizado[i];
+        } else if (code >= 0x20 && code <= 0x7e) {
+            out += normalizado[i];
+        } else if (code >= 0xa0 && code <= 0xff) {
+            out += '\\' + code.toString(8).padStart(3, '0');
+        } else {
+            out += '?';
+        }
+    }
+    return out;
+}
+
+function quebrarLinhaPdf(linha, maxCols = 92) {
+    const texto = String(linha || '').trim();
+    if (!texto) return [''];
+    const palavras = texto.split(/\s+/);
+    const resultado = [];
+    let atual = '';
+    palavras.forEach(p => {
+        if (!atual) {
+            atual = p;
+        } else if ((atual.length + 1 + p.length) <= maxCols) {
+            atual += ' ' + p;
+        } else {
+            resultado.push(atual);
+            atual = p;
+        }
+    });
+    if (atual) resultado.push(atual);
+    return resultado;
+}
+
+function gerarPdfBinarioDeHtml(htmlDoc) {
+    const semStyleHead = String(htmlDoc || '')
+        .replace(/<head[\s\S]*?<\/head>/gi, '')
+        .replace(/<\/?(h1|h2|div|tr|p|br|table|thead|tbody)[^>]*>/gi, '\n')
+        .replace(/<\/?(td|th)[^>]*>/gi, ' | ')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&rarr;/g, '->')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"');
+
+    const linhasBrutas = semStyleHead
+        .split('\n')
+        .map(l => l.replace(/\s*\|\s*\|\s*/g, ' | ').replace(/^\s*\|\s*|\s*\|\s*$/g, '').replace(/\s+/g, ' ').trim())
+        .filter(Boolean);
+
+    const linhasPaginadas = [];
+    linhasBrutas.forEach(l => {
+        quebrarLinhaPdf(l, 90).forEach(q => linhasPaginadas.push(q));
+    });
+
+    const linhasPorPagina = 48;
+    const paginas = [];
+    for (let i = 0; i < linhasPaginadas.length; i += linhasPorPagina) {
+        paginas.push(linhasPaginadas.slice(i, i + linhasPorPagina));
+    }
+    if (paginas.length === 0) paginas.push(['Relatorio Recomplica ENEM']);
+
+    const objetos = [];
+    const addObj = (conteudo) => {
+        objetos.push(conteudo);
+        return objetos.length;
+    };
+
+    const catalogId = addObj(''); // 1
+    const pagesId = addObj('');   // 2
+    const fontId = addObj('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>'); // 3
+
+    const pageIds = [];
+    paginas.forEach((linhas) => {
+        const ops = ['BT', '/F1 10 Tf', '14 TL', '40 800 Td'];
+        linhas.forEach((linha, idx) => {
+            const esc = escaparTextoPdfWinAnsi(linha);
+            if (idx === 0) {
+                ops.push(`(${esc}) Tj`);
+            } else {
+                ops.push(`T* (${esc}) Tj`);
+            }
+        });
+        ops.push('ET');
+        const streamStr = ops.join('\n');
+        const contentId = addObj(`<< /Length ${streamStr.length} >>\nstream\n${streamStr}\nendstream`);
+        const pageId = addObj(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ${fontId} 0 R >> >> /Contents ${contentId} 0 R >>`);
+        pageIds.push(pageId);
+    });
+
+    objetos[catalogId - 1] = `<< /Type /Catalog /Pages ${pagesId} 0 R >>`;
+    objetos[pagesId - 1] = `<< /Type /Pages /Kids [${pageIds.map(id => `${id} 0 R`).join(' ')}] /Count ${pageIds.length} >>`;
+
+    let pdf = '%PDF-1.4\n';
+    const offsets = [];
+    objetos.forEach((corpo, i) => {
+        offsets.push(pdf.length);
+        pdf += `${i + 1} 0 obj\n${corpo}\nendobj\n`;
+    });
+
+    const comentarioHtml = htmlDoc
+        .split('\n')
+        .map(l => `% ${l}`)
+        .join('\n');
+    pdf += `${comentarioHtml}\n`;
+
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objetos.length + 1}\n0000000000 65535 f \n`;
+    offsets.forEach(off => {
+        pdf += `${String(off).padStart(10, '0')} 00000 n \n`;
+    });
+    pdf += `trailer\n<< /Size ${objetos.length + 1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+    return pdf;
+}
+
+function baixarPdfDireto(htmlDoc, nomeArquivoPdf) {
+    const pdfStr = gerarPdfBinarioDeHtml(htmlDoc);
+    const blob = new Blob([pdfStr], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    const nomeEq = (equipe.nomeEquipe || 'equipe').toLowerCase().replace(/[^a-z0-9]+/g, '_');
-    a.download = `relatorio_recomplica_${nomeEq}_${new Date().toISOString().slice(0, 10)}.html`;
+    a.download = nomeArquivoPdf;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    exibirToast('Relatório PDF exportado com sucesso!');
+}
 
-    exibirToast('Relatório HTML imprimível gerado! Abra o arquivo para imprimir ou salvar como PDF.');
+window.exportarRelatorioPdf = function () {
+    const equipe = getEquipe();
+    const htmlDoc = window.gerarHtmlRelatorio();
+    const nomeEq = (equipe.nomeEquipe || 'equipe').toLowerCase().replace(/[^a-z0-9]+/g, '_');
+    const nomeArquivoPdf = `relatorio_recomplica_${nomeEq}_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+    if (typeof window.html2pdf === 'function') {
+        exibirToast('Gerando arquivo PDF do relatório... Aguarde.');
+        const containerPdf = document.createElement('div');
+        const styleMatch = htmlDoc.match(/<style[\s\S]*?<\/style>/i);
+        const bodyMatch = htmlDoc.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        containerPdf.innerHTML = `${styleMatch ? styleMatch[0] : ''}${bodyMatch ? bodyMatch[1] : htmlDoc}`;
+
+        const opcoesPdf = {
+            margin: [10, 10, 10, 10],
+            filename: nomeArquivoPdf,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['css', 'legacy'] }
+        };
+
+        window.html2pdf()
+            .set(opcoesPdf)
+            .from(containerPdf)
+            .save()
+            .then(() => {
+                exibirToast('Relatório PDF exportado com sucesso!');
+            })
+            .catch(() => {
+                baixarPdfDireto(htmlDoc, nomeArquivoPdf);
+            });
+        return;
+    }
+
+    baixarPdfDireto(htmlDoc, nomeArquivoPdf);
 };
+
+window.exportarRelatorioHtmlImprimivel = window.exportarRelatorioPdf;
 
 // -------------------------------------------------------------------------
 // 6. Inicialização das Telas ao Carregar o DOM

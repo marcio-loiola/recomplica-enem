@@ -26,7 +26,7 @@
             <h2>📄 Encerramento da Atividade, Entrega e Avaliação</h2>
             <p>
                 Esta área consolida toda a produção coletiva da equipe e a contribuição individual de cada estudante.
-                Utilize os botões abaixo para <strong>exportar o Relatório em HTML imprimível (Salvar como PDF)</strong> e o <strong>Backup dos Dados em JSON</strong>.
+                Utilize os botões abaixo para <strong>exportar o Relatório em PDF</strong> e o <strong>Backup dos Dados em JSON</strong>.
             </p>
         </section>
 
@@ -35,14 +35,11 @@
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <div>
                     <h2 style="font-size: 1.05rem; color: #0f766e; font-weight: 800;">📦 Exportação para Entrega ao Professor</h2>
-                    <p style="font-size: 0.85rem; color: #115e59;">Gere os arquivos finais da avaliação ou imprima diretamente esta página em PDF.</p>
+                    <p style="font-size: 0.85rem; color: #115e59;">Baixe diretamente o relatório consolidado em PDF (gerado a partir do relatório HTML) e o backup em JSON.</p>
                 </div>
                 <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
-                    <button type="button" class="btn" onclick="exportarRelatorioHtmlImprimivel()">
-                        📄 Exportar Relatório HTML Imprimível (PDF)
-                    </button>
-                    <button type="button" class="btn btn-indigo" onclick="window.print()">
-                        🖨️ Imprimir / Salvar PDF Agora
+                    <button type="button" class="btn" id="btnExportarPdf" onclick="exportarRelatorioPdf()">
+                        🖨️ Imprimir / Exportar Relatório PDF
                     </button>
                     <button type="button" class="btn btn-secondary" onclick="exportarBackupJson()">
                         💾 Exportar Backup JSON
@@ -157,6 +154,7 @@
         </section>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="validadores.js"></script>
     <script src="app.js"></script>
 </body>

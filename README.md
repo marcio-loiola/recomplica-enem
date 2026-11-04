@@ -34,7 +34,7 @@ Neste sistema web, os estudantes atuam em **equipes de suporte e sustentação**
      3. *Como verificou ou justificou a solução?*
 5. **Entrega e Avaliação (`relatorio.html`)**
    - Consolida o relatório da equipe, indicadores, registros de atendimento com responsáveis, fichas individuais e trilha de auditoria.
-   - **Exportar Relatório em HTML Imprimível (Salvar como PDF)**.
+   - **Imprimir / Exportar Relatório em PDF** (converte automaticamente o relatório HTML consolidado em arquivo `.pdf`).
    - **Exportar Backup dos Dados em JSON**.
 6. **Persistência e Segurança (`localStorage`)**
    - Preserva todos os dados durante a navegação e atualização da página (`recomplica_equipe_v1`, `recomplica_chamados_v1`, `recomplica_fichas_v1`, `recomplica_historico_v1`).
